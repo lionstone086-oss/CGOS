@@ -1,0 +1,6 @@
+{
+  "name": "CGOS - Citizen Governance Operating System",
+  "description": "A national civic-tech operating system for transparency, public participation, legal accountability, and institutional oversight.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["recharts", "firebase", "motion"]
+}

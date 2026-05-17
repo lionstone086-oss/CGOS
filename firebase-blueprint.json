@@ -1,0 +1,160 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Represents a citizen, candidate, or official on the platform.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["citizen", "candidate", "governor", "mp", "mca", "auditor", "journalist", "admin"] },
+        "location": { "type": "string" },
+        "bio": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Budget": {
+      "title": "Public Budget",
+      "description": "Financial allocation data for counties or constituencies.",
+      "type": "object",
+      "properties": {
+        "region": { "type": "string" },
+        "fiscalYear": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "recurrentSpending": { "type": "number" },
+        "developmentSpending": { "type": "number" },
+        "categories": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["region", "fiscalYear", "totalAmount"]
+    },
+    "PriorityDemand": {
+      "title": "Citizen Priority Demand",
+      "description": "A public necessity defined by the community.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "region": { "type": "string" },
+        "authorId": { "type": "string" },
+        "votesCount": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "merged", "in-negotiation", "contracted"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "region", "authorId"]
+    },
+    "GovernanceContract": {
+      "title": "Governance Contract",
+      "description": "A negotiated agreement between a candidate and citizens.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "candidateId": { "type": "string" },
+        "region": { "type": "string" },
+        "commitments": { "type": "array" },
+        "status": { "type": "string", "enum": ["draft", "signed", "active", "completed"] },
+        "signedAt": { "type": "string", "format": "date-time" },
+        "auditTrailId": { "type": "string" }
+      },
+      "required": ["candidateId", "region", "commitments"]
+    },
+    "Project": {
+      "title": "Governance Project",
+      "description": "A specific infrastructure or social project being implemented.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "contractId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "budget": { "type": "number" },
+        "contractor": { "type": "string" },
+        "progress": { "type": "number" },
+        "location": { "type": "object" },
+        "status": { "type": "string" },
+        "startDate": { "type": "string", "format": "date" },
+        "expectedCompletion": { "type": "string", "format": "date" },
+        "evidenceUrls": { "type": "array" }
+      },
+      "required": ["title", "budget", "progress"]
+    },
+    "CivilReport": {
+      "title": "Citizen Evidence Report",
+      "description": "Evidence submitted by citizens about project progress or corruption.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projectId": { "type": "string" },
+        "authorId": { "type": "string" },
+        "type": { "type": "string", "enum": ["progress", "corruption", "stalled", "feedback"] },
+        "content": { "type": "string" },
+        "mediaUrls": { "type": "array" },
+        "isVerified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "type", "content"]
+    },
+    "Vote": {
+      "title": "Vote Record",
+      "description": "Represents a single vote on a demand to prevent duplication.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "timestamp"]
+    },
+    "DiscussionMessage": {
+      "title": "Discussion Message",
+      "description": "A message in a negotiation or discussion room.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "content"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents."
+    },
+    "/budgets/{budgetId}": {
+      "schema": "Budget",
+      "description": "Historical and current budget data."
+    },
+    "/demands/{demandId}": {
+      "schema": "PriorityDemand",
+      "description": "Citizen priority demands collection."
+    },
+    "/demands/{demandId}/votes/{voteId}": {
+      "schema": "Vote",
+      "description": "Votes for a specific demand."
+    },
+    "/discussions/{discussionId}/messages/{messageId}": {
+      "schema": "DiscussionMessage",
+      "description": "Messages in a specific discussion thread."
+    },
+    "/contracts/{contractId}": {
+      "schema": "GovernanceContract",
+      "description": "Governance contracts between leaders and citizens."
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Active and completed projects tracking."
+    },
+    "/reports/{reportId}": {
+      "schema": "CivilReport",
+      "description": "Crowdsourced reports and evidence."
+    }
+  }
+}
